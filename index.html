@@ -1,0 +1,2424 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="artifact-type" content="tool">
+  <meta name="design-style" content="sticker">
+  <title>我是校園特派小記者：校園新聞仿寫與採訪挑戰</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@1.43.0/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+
+      /* 1. Sticker style tokens */
+      --background: #fef7ff;
+      --surface-container-low: #ffffff;
+      --surface-container: #f8eef8;
+      --surface-container-high: #f2e8f2;
+
+      --on-surface: #2e1a28;
+      --on-surface-variant: #604868;
+
+      --outline: #907898;
+      --outline-variant: #dcc8e0;
+
+      --primary: #c2207f;
+      --on-primary: #ffffff;
+      --primary-container: #f080c0;
+      --on-primary-container: #2e1a28;
+      --secondary: #7c52aa;
+      --on-secondary: #ffffff;
+      --tertiary: #0096cc;
+      --error: #c53030;
+      --on-error: #ffffff;
+
+      --data-1: #c2207f;
+      --data-2: #7c52aa;
+      --data-3: #0096cc;
+      --data-4: #d96a00;
+      --data-context: #c8b8d0;
+
+      /* 2. Non-Latin CJK font pairing */
+      --font-headline: 'Noto Sans TC', 'DM Sans', sans-serif;
+      --font-body: 'Noto Sans TC', 'DM Sans', sans-serif;
+      --font-label: 'Noto Sans TC', 'DM Sans', sans-serif;
+
+      /* Shape */
+      --rounded: 1rem;
+      --rounded-lg: 2rem;
+      --rounded-full: 9999px;
+
+      /* Style effects */
+      --shadow-pink: 0 4px 16px rgb(224 64 160 / 0.2);
+      --shadow-pink-deep: 0 10px 28px rgb(224 64 160 / 0.32);
+      --shadow-grape: 0 4px 16px rgb(124 82 170 / 0.2);
+      --shadow-grape-deep: 0 10px 28px rgb(124 82 170 / 0.32);
+      --shadow-sky: 0 4px 16px rgb(0 150 204 / 0.2);
+      --shadow-sky-deep: 0 10px 28px rgb(0 150 204 / 0.3);
+      --pop-scale: scale(1.03);
+      --lift: translateY(-4px);
+      --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+      /* 3. Shared semantic & scale tokens */
+      --positive: #15803d;
+      --positive-bg: #dcfce7;
+      --warning: #b45309;
+      --warning-bg: #fef3c7;
+      --error-bg: #fee2e2;
+      --sky-bg: #e0f2fe;
+      --grape-bg: #f3e8ff;
+      --pink-bg: #fce7f3;
+      --tangerine: #d96a00;
+      --tangerine-bg: #ffedd5;
+      --focus: var(--primary);
+
+      /* Type scale (Focused Tool + Friendly Kid Legibility) */
+      --display-size: clamp(1.75rem, 1.35rem + 1.5vw, 2.5rem);
+      --headline-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.625rem);
+      --subhead-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+      --body-size: clamp(1rem, 0.96rem + 0.2vw, 1.0625rem);
+      --label-size: 0.8125rem;
+
+      /* Spacing scale */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2.5rem;
+      --space-2xl: 4rem;
+      --space-3xl: 6rem;
+
+      /* Motion */
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      --dur-micro: 120ms;
+      --dur-short: 220ms;
+      --dur-long: 420ms;
+    }
+
+    /* Base reset */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      overflow-x: clip;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background);
+      color: var(--on-surface);
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.65;
+    }
+    header { position: static !important; }
+    button, input, select, textarea {
+      font-family: inherit;
+      font-size: inherit;
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    .page-grid {
+      display: grid;
+      gap: var(--space-lg);
+      padding: var(--space-lg);
+      max-width: 1120px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .page-grid * { min-width: 0; }
+
+    /* Hero / Masthead Panel */
+    .hero-panel {
+      background: var(--surface-container-low);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-xl);
+      box-shadow: var(--shadow-pink);
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+      gap: var(--space-xl);
+      align-items: center;
+    }
+
+    .kicker-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+      padding: var(--space-xs) var(--space-md);
+      border-radius: var(--rounded-full);
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      font-weight: 700;
+      margin-bottom: var(--space-md);
+    }
+
+    .display {
+      font-family: var(--font-headline);
+      font-weight: 900;
+      font-size: var(--display-size);
+      line-height: 1.15;
+      margin: 0 0 var(--space-sm) 0;
+      color: var(--on-surface);
+    }
+    .display em {
+      font-style: normal;
+      color: var(--primary);
+    }
+
+    .hero-subtitle {
+      margin: 0 0 var(--space-lg) 0;
+      color: var(--on-surface-variant);
+      max-width: 60ch;
+    }
+
+    /* Press Pass Widget in Hero */
+    .press-pass-card {
+      background: var(--surface-container);
+      border-radius: var(--rounded);
+      padding: var(--space-lg);
+      box-shadow: var(--shadow-grape);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .press-pass-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-sm);
+    }
+
+    .press-badge-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      background: var(--secondary);
+      color: var(--on-secondary);
+      padding: var(--space-xs) var(--space-md);
+      border-radius: var(--rounded-full);
+      font-size: var(--label-size);
+      font-weight: 700;
+    }
+
+    .score-figure {
+      font-weight: 900;
+      font-size: 1.75rem;
+      line-height: 1.1;
+      color: var(--primary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+    .field-label {
+      font-size: var(--label-size);
+      font-weight: 700;
+      color: var(--on-surface-variant);
+    }
+    .pill-input {
+      background: var(--surface-container-low);
+      border: 2px solid var(--outline);
+      border-radius: var(--rounded-full);
+      padding: var(--space-sm) var(--space-md);
+      color: var(--on-surface);
+      font-weight: 700;
+      min-height: 44px;
+      width: 100%;
+      transition: border-color var(--dur-micro) var(--ease-out), box-shadow var(--dur-micro) var(--ease-out);
+    }
+    .pill-input:focus {
+      border-color: var(--primary);
+      box-shadow: var(--shadow-pink);
+    }
+
+    /* Progress Bar */
+    .progress-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: var(--label-size);
+      font-weight: 700;
+      color: var(--on-surface-variant);
+      font-variant-numeric: tabular-nums;
+    }
+    .progress-track {
+      width: 100%;
+      height: 14px;
+      background: var(--surface-container-high);
+      border-radius: var(--rounded-full);
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--tertiary);
+      border-radius: var(--rounded-full);
+      width: 0%;
+      transition: width var(--dur-long) var(--ease-bounce);
+    }
+
+    /* Badge Case Strip */
+    .badge-strip {
+      background: var(--surface-container-low);
+      border-radius: var(--rounded);
+      padding: var(--space-md) var(--space-lg);
+      box-shadow: var(--shadow-sky);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+    }
+    .badge-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      align-items: center;
+    }
+    .badge-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      padding: var(--space-xs) var(--space-md);
+      border-radius: var(--rounded-full);
+      font-size: var(--label-size);
+      font-weight: 700;
+      background: var(--surface-container);
+      color: var(--on-surface-variant);
+      min-height: 36px;
+      transition: transform var(--dur-short) var(--ease-bounce), background-color var(--dur-short) var(--ease-out);
+    }
+    .badge-chip.earned {
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+      box-shadow: var(--shadow-pink);
+      transform: scale(1.02);
+    }
+
+    /* Stage Navigation Pills */
+    .stage-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: var(--space-sm);
+    }
+    .stage-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--rounded);
+      border: 2px solid transparent;
+      background: var(--surface-container-low);
+      color: var(--on-surface);
+      box-shadow: var(--shadow-grape);
+      cursor: pointer;
+      min-height: 44px;
+      text-align: left;
+      transition: transform var(--dur-short) var(--ease-bounce), box-shadow var(--dur-short) var(--ease-out), background-color var(--dur-short) var(--ease-out);
+    }
+    .stage-tab:hover {
+      transform: var(--lift);
+      box-shadow: var(--shadow-grape-deep);
+    }
+    .stage-tab.active {
+      background: var(--primary);
+      color: var(--on-primary);
+      box-shadow: var(--shadow-pink-deep);
+    }
+    .stage-tab.completed:not(.active) {
+      background: var(--positive-bg);
+      color: var(--positive);
+    }
+    .stage-tab-kicker {
+      font-size: 0.75rem;
+      font-weight: 700;
+      opacity: 0.9;
+    }
+    .stage-tab-title {
+      font-size: 0.9375rem;
+      font-weight: 800;
+      line-height: 1.3;
+    }
+
+    /* Main Stage Card */
+    .stage-card {
+      background: var(--surface-container-low);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-xl);
+      box-shadow: var(--shadow-pink);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-lg);
+    }
+    .stage-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-md);
+    }
+    .stage-title {
+      font-family: var(--font-headline);
+      font-weight: 800;
+      font-size: var(--headline-size);
+      margin: 0 0 var(--space-xs) 0;
+      color: var(--on-surface);
+    }
+    .stage-desc {
+      margin: 0;
+      color: var(--on-surface-variant);
+      max-width: 65ch;
+    }
+    .stage-points-pill {
+      background: var(--grape-bg);
+      color: var(--secondary);
+      padding: var(--space-xs) var(--space-md);
+      border-radius: var(--rounded-full);
+      font-weight: 800;
+      font-size: var(--label-size);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    /* Pre-training Tip Banner */
+    .tip-box {
+      background: var(--surface-container);
+      border-radius: var(--rounded);
+      padding: var(--space-md) var(--space-lg);
+      display: flex;
+      gap: var(--space-md);
+      align-items: flex-start;
+    }
+    .tip-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--rounded-full);
+      background: var(--tertiary);
+      color: var(--on-primary);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+    .tip-content {
+      font-size: 0.95rem;
+      color: var(--on-surface);
+    }
+    .tip-content strong {
+      color: var(--primary);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      border: none;
+      border-radius: var(--rounded-full);
+      padding: var(--space-sm) var(--space-lg);
+      min-height: 44px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform var(--dur-short) var(--ease-bounce), box-shadow var(--dur-short) var(--ease-out), background-color var(--dur-short) var(--ease-out);
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--on-primary);
+      box-shadow: var(--shadow-pink);
+    }
+    .btn-primary:hover:not(:disabled) {
+      transform: var(--pop-scale);
+      box-shadow: var(--shadow-pink-deep);
+    }
+    .btn-secondary {
+      background: var(--secondary);
+      color: var(--on-secondary);
+      box-shadow: var(--shadow-grape);
+    }
+    .btn-secondary:hover:not(:disabled) {
+      transform: var(--pop-scale);
+      box-shadow: var(--shadow-grape-deep);
+    }
+    .btn-soft {
+      background: var(--surface-container);
+      color: var(--on-surface);
+    }
+    .btn-soft:hover:not(:disabled) {
+      transform: var(--pop-scale);
+      background: var(--surface-container-high);
+    }
+    .btn-quiet {
+      background: transparent;
+      color: var(--primary);
+      padding: var(--space-xs) var(--space-md);
+    }
+    .btn-quiet:hover:not(:disabled) {
+      background: var(--pink-bg);
+    }
+
+    /* Feedback Banner */
+    .feedback-box {
+      border-radius: var(--rounded);
+      padding: var(--space-md) var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+      font-weight: 600;
+      animation: popIn var(--dur-short) var(--ease-bounce);
+    }
+    .feedback-box.success {
+      background: var(--positive-bg);
+      color: var(--positive);
+    }
+    .feedback-box.error {
+      background: var(--error-bg);
+      color: var(--error);
+    }
+    .feedback-box.info {
+      background: var(--sky-bg);
+      color: var(--on-surface);
+    }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.96) translateY(6px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* Stage 1: 5W1H Detective */
+    .news-passage {
+      background: var(--surface-container);
+      border-radius: var(--rounded);
+      padding: var(--space-lg);
+      font-size: 1.0625rem;
+      line-height: 1.9;
+    }
+    .clue-highlight {
+      display: inline-block;
+      background: var(--surface-container-low);
+      color: var(--primary);
+      font-weight: 800;
+      padding: 2px 10px;
+      margin: 0 2px;
+      border-radius: var(--rounded-full);
+      box-shadow: var(--shadow-pink);
+    }
+    .clue-bank {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+    .clue-chip {
+      border: 2px solid var(--outline-variant);
+      background: var(--surface-container-low);
+      color: var(--on-surface);
+      border-radius: var(--rounded-full);
+      padding: var(--space-sm) var(--space-md);
+      min-height: 44px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: var(--shadow-sky);
+      transition: transform var(--dur-short) var(--ease-bounce), border-color var(--dur-micro) var(--ease-out), background-color var(--dur-micro) var(--ease-out);
+    }
+    .clue-chip:hover:not(:disabled) {
+      transform: var(--pop-scale);
+      border-color: var(--primary);
+    }
+    .clue-chip.selected {
+      background: var(--primary);
+      color: var(--on-primary);
+      border-color: var(--primary);
+      box-shadow: var(--shadow-pink-deep);
+    }
+    .clue-chip.used {
+      opacity: 0.45;
+      box-shadow: none;
+    }
+
+    .w5h1-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+      gap: var(--space-md);
+    }
+    .w5h1-slot {
+      background: var(--surface-container);
+      border: 2px dashed var(--outline);
+      border-radius: var(--rounded);
+      padding: var(--space-md);
+      min-height: 108px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: var(--space-sm);
+      cursor: pointer;
+      text-align: left;
+      transition: transform var(--dur-short) var(--ease-bounce), border-color var(--dur-micro) var(--ease-out), background-color var(--dur-micro) var(--ease-out);
+    }
+    .w5h1-slot:hover {
+      transform: var(--lift);
+      border-color: var(--primary);
+    }
+    .w5h1-slot.filled {
+      border-style: solid;
+      border-color: var(--secondary);
+      background: var(--surface-container-low);
+      box-shadow: var(--shadow-grape);
+    }
+    .w5h1-slot.correct {
+      border-color: var(--positive);
+      background: var(--positive-bg);
+    }
+    .w5h1-slot.wrong {
+      border-color: var(--error);
+      background: var(--error-bg);
+    }
+    .w5h1-label {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      font-weight: 800;
+      font-size: var(--label-size);
+      color: var(--secondary);
+    }
+    .w5h1-answer {
+      font-weight: 700;
+      color: var(--on-surface);
+      font-size: 0.95rem;
+    }
+    .w5h1-placeholder {
+      color: var(--on-surface-variant);
+      font-size: 0.875rem;
+    }
+
+    /* Stage 2: Inverted Pyramid */
+    .pyramid-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: var(--space-lg);
+      align-items: start;
+    }
+    .pyramid-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-md);
+      background: var(--surface-container);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+    }
+    .pyramid-tier {
+      border: 2px dashed var(--outline);
+      background: var(--surface-container-low);
+      border-radius: var(--rounded);
+      padding: var(--space-md);
+      min-height: 92px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+      cursor: pointer;
+      transition: transform var(--dur-short) var(--ease-bounce), border-color var(--dur-micro) var(--ease-out), background-color var(--dur-micro) var(--ease-out);
+      text-align: left;
+    }
+    .pyramid-tier.tier-top { width: 100%; }
+    .pyramid-tier.tier-mid { width: 86%; }
+    .pyramid-tier.tier-bot { width: 72%; }
+    .pyramid-tier:hover {
+      transform: var(--lift);
+      border-color: var(--primary);
+    }
+    .pyramid-tier.filled {
+      border-style: solid;
+      border-color: var(--primary);
+      box-shadow: var(--shadow-pink);
+    }
+    .pyramid-tier.correct {
+      border-color: var(--positive);
+      background: var(--positive-bg);
+    }
+    .pyramid-tier.wrong {
+      border-color: var(--error);
+      background: var(--error-bg);
+    }
+    .tier-badge {
+      font-size: var(--label-size);
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .block-pool {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+    .puzzle-block {
+      background: var(--surface-container-low);
+      border: 2px solid var(--outline-variant);
+      border-radius: var(--rounded);
+      padding: var(--space-md);
+      box-shadow: var(--shadow-sky);
+      cursor: pointer;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+      transition: transform var(--dur-short) var(--ease-bounce), border-color var(--dur-micro) var(--ease-out);
+    }
+    .puzzle-block:hover:not(:disabled) {
+      transform: var(--lift);
+      border-color: var(--primary);
+    }
+    .puzzle-block.selected {
+      border-color: var(--primary);
+      background: var(--pink-bg);
+      box-shadow: var(--shadow-pink-deep);
+    }
+    .puzzle-block.used {
+      opacity: 0.45;
+      box-shadow: none;
+    }
+
+    /* Stage 3: Fact vs Opinion */
+    .flashcard-panel {
+      background: var(--surface-container);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-xl);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: var(--space-lg);
+    }
+    .quote-card {
+      background: var(--surface-container-low);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-xl);
+      box-shadow: var(--shadow-grape);
+      max-width: 640px;
+      width: 100%;
+    }
+    .quote-text {
+      font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.625rem);
+      font-weight: 800;
+      margin: 0;
+      color: var(--on-surface);
+      line-height: 1.5;
+    }
+    .binary-choices {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: var(--space-md);
+      width: 100%;
+    }
+    .choice-card-btn {
+      flex: 1 1 220px;
+      max-width: 280px;
+      min-height: 64px;
+      border-radius: var(--rounded-lg);
+      border: 2px solid transparent;
+      font-weight: 800;
+      font-size: 1.0625rem;
+      cursor: pointer;
+      padding: var(--space-md) var(--space-lg);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      transition: transform var(--dur-short) var(--ease-bounce), box-shadow var(--dur-short) var(--ease-out);
+    }
+    .choice-fact {
+      background: var(--surface-container-low);
+      color: var(--secondary);
+      box-shadow: var(--shadow-grape);
+    }
+    .choice-opinion {
+      background: var(--surface-container-low);
+      color: var(--primary);
+      box-shadow: var(--shadow-pink);
+    }
+    .choice-card-btn:hover:not(:disabled) {
+      transform: var(--pop-scale);
+    }
+
+    /* Stage 4: Interview Scenarios */
+    .option-list {
+      display: grid;
+      gap: var(--space-md);
+    }
+    .option-btn {
+      background: var(--surface-container-low);
+      border: 2px solid var(--outline-variant);
+      border-radius: var(--rounded);
+      padding: var(--space-md) var(--space-lg);
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-md);
+      box-shadow: var(--shadow-sky);
+      min-height: 56px;
+      transition: transform var(--dur-short) var(--ease-bounce), border-color var(--dur-micro) var(--ease-out), background-color var(--dur-micro) var(--ease-out);
+    }
+    .option-btn:hover:not(:disabled) {
+      transform: var(--lift);
+      border-color: var(--primary);
+    }
+    .option-btn.selected {
+      border-color: var(--primary);
+      background: var(--pink-bg);
+    }
+    .option-btn.correct {
+      border-color: var(--positive);
+      background: var(--positive-bg);
+    }
+    .option-btn.wrong {
+      border-color: var(--error);
+      background: var(--error-bg);
+    }
+    .option-letter {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--rounded-full);
+      background: var(--secondary);
+      color: var(--on-secondary);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    /* Stage 5: Editor Layout & Newspaper Preview */
+    .editor-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+      gap: var(--space-lg);
+    }
+    .photo-frame {
+      background: var(--surface-container);
+      border-radius: var(--rounded);
+      padding: var(--space-md);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    .checklist-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+      gap: var(--space-sm);
+    }
+    .check-pill {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      background: var(--surface-container);
+      border-radius: var(--rounded);
+      padding: var(--space-sm) var(--space-md);
+      min-height: 44px;
+      cursor: pointer;
+      font-weight: 600;
+      border: 2px solid transparent;
+      transition: background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
+    }
+    .check-pill.checked {
+      background: var(--positive-bg);
+      border-color: var(--positive);
+      color: var(--positive);
+    }
+    .check-pill input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--positive);
+      flex-shrink: 0;
+    }
+
+    /* Final Published Class Newspaper */
+    .newspaper-sheet {
+      background: var(--surface-container-low);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-xl);
+      box-shadow: var(--shadow-pink-deep);
+      border: 3px solid var(--secondary);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+    .paper-masthead {
+      border-bottom: 4px double var(--on-surface);
+      padding-bottom: var(--space-sm);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: var(--space-sm);
+    }
+    .paper-name {
+      font-weight: 900;
+      font-size: clamp(1.5rem, 1.2rem + 1vw, 2.25rem);
+      color: var(--primary);
+      margin: 0;
+    }
+    .paper-meta {
+      font-size: var(--label-size);
+      font-weight: 700;
+      color: var(--on-surface-variant);
+    }
+    .paper-body-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+      gap: var(--space-lg);
+      align-items: start;
+    }
+    .paper-headline {
+      font-size: clamp(1.35rem, 1.15rem + 0.8vw, 1.875rem);
+      font-weight: 900;
+      margin: 0 0 var(--space-xs) 0;
+      color: var(--on-surface);
+    }
+    .paper-byline {
+      display: inline-block;
+      background: var(--grape-bg);
+      color: var(--secondary);
+      padding: 2px var(--space-md);
+      border-radius: var(--rounded-full);
+      font-size: var(--label-size);
+      font-weight: 700;
+      margin-bottom: var(--space-sm);
+    }
+
+    .step-dots {
+      display: flex;
+      gap: var(--space-xs);
+      align-items: center;
+    }
+    .step-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: var(--rounded-full);
+      background: var(--outline-variant);
+    }
+    .step-dot.active {
+      background: var(--primary);
+      width: 24px;
+    }
+    .step-dot.done {
+      background: var(--positive);
+    }
+
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-md);
+      margin-top: var(--space-sm);
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: var(--label-size);
+      color: var(--on-surface-variant);
+      padding: var(--space-md) 0 var(--space-xl) 0;
+    }
+
+    @media (max-width: 640px) {
+      .page-grid { padding: var(--space-sm); gap: var(--space-md); }
+      .hero-panel { grid-template-columns: 1fr; padding: var(--space-lg); }
+      .pyramid-layout { grid-template-columns: 1fr; }
+      .pyramid-tier.tier-mid, .pyramid-tier.tier-bot { width: 100%; }
+      .paper-body-grid { grid-template-columns: 1fr; }
+      .stage-card { padding: var(--space-lg); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-grid">
+    <!-- Hero Section -->
+    <header class="hero-panel">
+      <div>
+        <div class="kicker-pill">
+          <i data-lucide="newspaper" aria-hidden="true"></i>
+          <span>小小記者培力營・三年級互動挑戰</span>
+        </div>
+        <h1 class="display">我是校園特派<em>小記者</em>：新聞寫作與採訪大冒險</h1>
+        <p class="hero-subtitle">
+          找事實、訪亮點、寫出精彩校園新聞稿！完成五道互動闖關任務，收集五枚專屬記者徽章，就能親手發布我們班的《校園新聞創刊號》！
+        </p>
+      </div>
+
+      <section class="press-pass-card" aria-label="小記者通行證">
+        <div class="press-pass-top">
+          <span class="press-badge-tag">
+            <i data-lucide="badge-check" aria-hidden="true"></i>
+            <span id="reporter-rank-label">實習小記者</span>
+          </span>
+          <div class="score-figure"><span id="total-score">0</span> / 100 分</div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="reporter-name-input">小記者姓名（會印在記者證與新聞報上）</label>
+          <input
+            id="reporter-name-input"
+            class="pill-input"
+            type="text"
+            maxlength="12"
+            placeholder="請輸入你的名字，例如：王小明"
+            oninput="handleNameInput(this.value)"
+          >
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-meta">
+            <span>闖關總進度</span>
+            <span id="progress-count">0 / 5 關已完成</span>
+          </div>
+          <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress-bar-wrap">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+        </div>
+      </section>
+    </header>
+
+    <!-- Badge Case & Reset -->
+    <section class="badge-strip" aria-label="通關徽章收集盒">
+      <div class="badge-list" id="badge-list"></div>
+      <button type="button" class="btn btn-quiet" id="reset-btn" onclick="handleResetClick(this)">
+        <i data-lucide="rotate-ccw" aria-hidden="true"></i>
+        <span>重新挑戰</span>
+      </button>
+    </section>
+
+    <!-- Stage Switcher Navigation -->
+    <nav class="stage-nav" aria-label="五關闖關地圖" id="stage-nav"></nav>
+
+    <!-- Active Stage Container -->
+    <section class="stage-card" id="stage-container" aria-live="polite"></section>
+
+    <footer class="footer-note">
+      課程內容改編自：國語日報讀報教育指南、高毓屏老師《迎戰AI 小記者訪查培力》教案、徐如宜與陳玉珊校園新聞稿寫作教學範例。
+    </footer>
+  </main>
+
+  <api-shim></api-shim>
+  <script>
+    // ---------- Static Game Data (Template Literals Only) ----------
+    var BADGES = [
+      { id: 1, icon: `search`, label: `🔍 5W1H 偵探章` },
+      { id: 2, icon: `layers`, label: `🧱 倒金字塔大師` },
+      { id: 3, icon: `eye`, label: `👀 火眼金睛章` },
+      { id: 4, icon: `mic`, label: `🎤 金麥克風章` },
+      { id: 5, icon: `award`, label: `📰 王牌小主編` }
+    ];
+
+    var STAGE_META = [
+      { id: 1, short: `第一關`, title: `新聞偵探 5W1H` },
+      { id: 2, short: `第二關`, title: `倒金字塔大拼圖` },
+      { id: 3, short: `第三關`, title: `事實 vs. 觀點` },
+      { id: 4, short: `第四關`, title: `採訪提問大師` },
+      { id: 5, short: `第五關`, title: `主編組版大挑戰` },
+      { id: 6, short: `總結算`, title: `領證與創刊號` }
+    ];
+
+    // Stage 1: 5W1H Clues (Grounded in Guoyu Daily solar cooker example)
+    var S1_ITEMS = [
+      {
+        id: `where`,
+        label: `Where（何處）`,
+        hint: `事情發生的地點在哪裡？`,
+        correctText: `高雄市港和國小操場`,
+        explanation: `「高雄市港和國小操場」明確告訴讀者活動舉辦的學校與場地。`
+      },
+      {
+        id: `when`,
+        label: `When（何時）`,
+        hint: `活動是在什麼時間舉辦的？`,
+        correctText: `昨天`,
+        explanation: `「昨天」交代了新聞事件發生的時間點。`
+      },
+      {
+        id: `who`,
+        label: `Who（何人）`,
+        hint: `參與這場活動的主角是誰？`,
+        correctText: `小朋友和家長`,
+        explanation: `「小朋友和家長」是參與這場親子比賽的主要人物。`
+      },
+      {
+        id: `what`,
+        label: `What（何事）`,
+        hint: `發生了什麼重要活動或比賽？`,
+        correctText: `親子太陽能悶燒鍋比賽`,
+        explanation: `「親子太陽能悶燒鍋比賽」就是這則報導的核心事件。`
+      },
+      {
+        id: `how`,
+        label: `How（如何）`,
+        hint: `他們用了什麼方法與道具進行實驗？`,
+        correctText: `利用錫箔紙、紙箱及鍋子悶燒綠豆與雞蛋`,
+        explanation: `「利用錫箔紙、紙箱及鍋子悶燒綠豆與雞蛋」說明了比賽進行的過程與方式。`
+      },
+      {
+        id: `why`,
+        label: `Why（為何）`,
+        hint: `舉辦或參與這個活動的原因與收穫是什麼？`,
+        correctText: `學習運用太陽能並重視節約能源`,
+        explanation: `「學習運用太陽能並重視節約能源」正是這個活動背後的重要原因與意義。`
+      }
+    ];
+
+    var S1_SHUFFLED_CHIPS = [
+      `親子太陽能悶燒鍋比賽`,
+      `昨天`,
+      `學習運用太陽能並重視節約能源`,
+      `高雄市港和國小操場`,
+      `利用錫箔紙、紙箱及鍋子悶燒綠豆與雞蛋`,
+      `小朋友和家長`
+    ];
+
+    // Stage 2: Inverted Pyramid Rounds (2 rounds)
+    var S2_ROUNDS = [
+      {
+        title: `任務一：太陽能悶燒鍋報導`,
+        subtitle: `請把這篇《國語日報》範例的三個段落，依「最重要放最前面」排進倒金字塔！`,
+        blocks: [
+          {
+            id: `lead`,
+            tag: `段落 A`,
+            text: `高雄市港和國小昨天舉辦親子太陽能悶燒鍋比賽，小朋友和家長在操場利用錫箔紙、紙箱及鍋子實驗悶燒食物，當看到鍋裡的綠豆滾煮，親子都開心地直歡呼！`
+          },
+          {
+            id: `body`,
+            tag: `段落 B`,
+            text: `許多小朋友在家長的陪同下，拿著大小紙箱和架子，將鍋子放在紙箱中保溫，四周以錫箔紙圍起來，有的小朋友則負責在旁拿放大鏡聚焦並觀察溫度變化。`
+          },
+          {
+            id: `tail`,
+            tag: `段落 C`,
+            text: `六年級的小朋友簡煒峰表示，透過這次比賽可以學習到運用太陽能的好處，也讓大家更重視日常生活中要節約能源。`
+          }
+        ],
+        correctOrder: [`lead`, `body`, `tail`],
+        feedback: `太棒了！第一段「導言」交代了誰、何時、何地與結果；第二段「本文」描寫紙箱與錫箔紙的操作細節；第三段「尾段」引用同學簡煒峰的心聲與節能意義！`
+      },
+      {
+        title: `任務二：班級拔河決賽報導`,
+        subtitle: `再來挑戰一篇校園拔河新聞！請依序排好「導言 ➔ 本文 ➔ 尾段」。`,
+        blocks: [
+          {
+            id: `tail`,
+            tag: `段落甲`,
+            text: `參賽選手小明興奮地說：「雖然雙手都磨紅了，但全班同心協力拿下冠軍，大家覺得非常值得！」`
+          },
+          {
+            id: `lead`,
+            tag: `段落乙`,
+            text: `本校三年級昨天下午在活動中心舉辦班際拔河決賽，三忠同學靠著整齊的口號與絕佳默契奪下年級冠軍，現場加油聲震撼全場。`
+          },
+          {
+            id: `body`,
+            tag: `段落丙`,
+            text: `比賽哨聲一響，選手們雙腳緊踩地板、身體向後傾，啦啦隊在一旁用力揮舞班旗吶喊，雙方僵持了整整一分鐘才分出勝負。`
+          }
+        ],
+        correctOrder: [`lead`, `body`, `tail`],
+        feedback: `完全正確！先說奪冠結果（導言），再描寫哨聲響起的比賽動作（本文），最後放上小明的得獎真心話（尾段），就是標準的倒金字塔！`
+      }
+    ];
+
+    // Stage 3: Fact vs Opinion
+    var S3_CARDS = [
+      {
+        statement: `「今天是星期日。」`,
+        answer: `fact`,
+        explanation: `這是客觀事實！星期幾可以透過日曆驗證，無論誰來查看，都會得到相同的結論。`
+      },
+      {
+        statement: `「今天的氣溫很舒服。」`,
+        answer: `opinion`,
+        explanation: `這是主觀觀點！每個人對冷熱的感受不同，你覺得舒服，怕冷的同學可能覺得有點涼。`
+      },
+      {
+        statement: `「華山國小安排愛心義剪服務，共有三十多位小朋友獲得免費剪髮照顧。」`,
+        answer: `fact`,
+        explanation: `這是客觀事實！「三十多位小朋友」與「義剪服務」都是現場真實發生且可被計算的資訊。`
+      },
+      {
+        statement: `「我覺得太陽能悶燒鍋比賽是全世界最好玩的活動！」`,
+        answer: `opinion`,
+        explanation: `這是主觀觀點！「我覺得」、「最好玩」代表個人的喜愛與感受，新聞報導要盡量客觀呈現事實喔！`
+      },
+      {
+        statement: `「圖書館高毓屏老師表示，三年級同學本週借閱最多的是科普童書。」`,
+        answer: `fact`,
+        explanation: `這是客觀事實！借閱紀錄有數據可查，且明確寫出「高毓屏老師表示」，如實轉述受訪者的話也是事實報導的原則！`
+      }
+    ];
+
+    // Stage 4: Interview Master
+    var S4_QUESTIONS = [
+      {
+        situation: `情境一：你準備訪問圖書館的高毓屏老師，想寫一篇大家愛看什麼書的新聞。下面哪個「核心訪題」能問出最豐富的內容？`,
+        options: [
+          {
+            text: `「老師，三年級同學喜歡看書嗎？」`,
+            correct: false,
+            why: `這是容易讓受訪者只回答「喜歡」就結束的「封閉式問題」，比較難挖出故事細節喔！`
+          },
+          {
+            text: `「老師您好，請問三年級同學最常借閱哪一類書？您對大家有什麼閱讀期許呢？」`,
+            correct: true,
+            why: `答對了！這種「開放式問題」能讓老師分享具體的熱門書單與期許，讓你的新聞稿超有料！`
+          }
+        ]
+      },
+      {
+        situation: `情境二：你訪問剛比完賽的小明同學，問完問題後小明只回答：「比賽好開心喔！」這時候小記者該怎麼「追問」才不會冷場？`,
+        options: [
+          {
+            text: `「恭喜你！比賽過程中哪一個瞬間讓你最緊張、最難忘呢？」`,
+            correct: true,
+            why: `太棒了！靈活的記者能從對方的回答中再找出小問題追問，引導受訪者說出感人的現場畫面！`
+          },
+          {
+            text: `「喔，好，那我記下來了，謝謝你，再見！」`,
+            correct: false,
+            why: `這樣對話就句點了！再多追問一句「為什麼開心」或「最難忘的瞬間」，報導會生動十倍！`
+          }
+        ]
+      },
+      {
+        situation: `情境三：走進校長室準備進行面對面採訪，小記者的「大禮儀」哪一項才正確？`,
+        options: [
+          {
+            text: `雙手交疊抱在胸前站好，不打招呼就直接打開平板按錄音鍵。`,
+            correct: false,
+            why: `小心踩雷！雙手交疊抱在胸前會讓受訪者覺得被排拒，而且拍照或錄音前一定要先徵求同意！`
+          },
+          {
+            text: `服裝整齊、面帶微笑打招呼與自我介紹，拍照錄音前先徵求校長同意，結束時全組鞠躬致謝。`,
+            correct: true,
+            why: `滿分禮儀！有禮貌、專注聆聽並事先徵求錄音同意，最能博得受訪者的好感與信任！`
+          }
+        ]
+      },
+      {
+        situation: `情境四：突發狀況！原本約好的體育老師臨時要帶隊外出比賽，沒辦法受訪，小記者的「B 計劃」是什麼？`,
+        options: [
+          {
+            text: `禮貌詢問可改約的時間，或保留相同的版面題目「更換合適的受訪者」（例如改訪體育組長或參賽同學）。`,
+            correct: true,
+            why: `應變力滿分！新聞現場常有變化，禮貌改約時間、更換合適受訪者，或組內討論調整版名，都是超棒的 B 計劃！`
+          },
+          {
+            text: `乾脆不採訪了，改寫一篇「今天早上我起床吃早餐好開心」的個人日記交差。`,
+            correct: false,
+            why: `避坑提醒！新聞報導要聚焦校園活動與受訪者，不能寫成個人日記流水帳喔！`
+          }
+        ]
+      }
+    ];
+
+    // Stage 5: Chief Editor Layout
+    var S5_TITLES = [
+      {
+        text: `昨天三年級舉辦了一場很好的比賽`,
+        correct: false,
+        reason: `這個標題太模糊了，讀者看不出是什麼比賽、誰贏了。`
+      },
+      {
+        text: `三年級跳大繩決賽 三甲連跳35下奪冠`,
+        correct: true,
+        reason: `精準又吸睛！用簡短有力的文字，直接點出「主角、活動與最大亮點」。`
+      },
+      {
+        text: `今天看同學跳繩我覺得超級開心的日記`,
+        correct: false,
+        reason: `新聞標題應該保持客觀並傳達重點，不能寫成個人日記喔！`
+      }
+    ];
+
+    var S5_CAPTIONS = [
+      {
+        text: `跳繩比賽`,
+        correct: false,
+        reason: `圖說不是只寫活動名稱而已，要用簡短文字說明「照片中的人在做什麼」！`
+      },
+      {
+        text: `▲這張照片是在操場拍的，天氣非常好。`,
+        correct: false,
+        reason: `沒有說清楚照片裡的主角是誰、正在進行什麼動作與表現。`
+      },
+      {
+        text: `▲三年級同學齊心協力跳大繩，展現絕佳團隊默契。`,
+        correct: true,
+        reason: `標準滿分圖說！開頭加上「▲」符號，並用簡短文字清楚說明了人事時地物與現場精神。`
+      }
+    ];
+
+    var S5_CHECKLIST = [
+      `標題醒目精準，傳達最大重點`,
+      `寫上小記者姓名與報導地點`,
+      `第一段導言完整交代 5W1H`,
+      `內文按時間順序敘述，無錯別字`,
+      `忠實引述受訪者的真實心得`,
+      `搭配生動照片與清楚圖說`
+    ];
+
+    // ---------- Application State ----------
+    function createInitialState() {
+      return {
+        reporterName: ``,
+        currentStage: 1,
+        stage1: {
+          assignments: { where: ``, when: ``, who: ``, what: ``, how: ``, why: `` },
+          selectedChip: ``,
+          checked: false,
+          score: 0,
+          completed: false
+        },
+        stage2: {
+          roundIdx: 0,
+          roundsDone: [false, false],
+          orders: [[null, null, null], [null, null, null]],
+          selectedBlockId: null,
+          checkedRounds: [false, false],
+          score: 0,
+          completed: false
+        },
+        stage3: {
+          currentIdx: 0,
+          answers: [null, null, null, null, null],
+          score: 0,
+          completed: false
+        },
+        stage4: {
+          currentIdx: 0,
+          answers: [null, null, null, null],
+          score: 0,
+          completed: false
+        },
+        stage5: {
+          titleIdx: null,
+          captionIdx: null,
+          checklist: [false, false, false, false, false, false],
+          published: false,
+          score: 0,
+          completed: false
+        }
+      };
+    }
+
+    var appState = createInitialState();
+
+    // ---------- Persistence Helpers ----------
+    async function saveState() {
+      try {
+        if (window.notebookAppApi && typeof window.notebookAppApi.setAppState === `function`) {
+          await window.notebookAppApi.setAppState(appState);
+        }
+      } catch (err) {
+        console.warn(`Save state failed:`, err);
+      }
+    }
+
+    function restoreFromState(saved) {
+      if (!saved || typeof saved !== `object`) return;
+      var def = createInitialState();
+      appState = {
+        reporterName: typeof saved.reporterName === `string` ? saved.reporterName : def.reporterName,
+        currentStage: typeof saved.currentStage === `number` ? saved.currentStage : def.currentStage,
+        stage1: saved.stage1 ? Object.assign({}, def.stage1, saved.stage1) : def.stage1,
+        stage2: saved.stage2 ? Object.assign({}, def.stage2, saved.stage2) : def.stage2,
+        stage3: saved.stage3 ? Object.assign({}, def.stage3, saved.stage3) : def.stage3,
+        stage4: saved.stage4 ? Object.assign({}, def.stage4, saved.stage4) : def.stage4,
+        stage5: saved.stage5 ? Object.assign({}, def.stage5, saved.stage5) : def.stage5
+      };
+    }
+
+    // ---------- Score & Header Sync ----------
+    function getTotalScore() {
+      return (
+        (appState.stage1.score || 0) +
+        (appState.stage2.score || 0) +
+        (appState.stage3.score || 0) +
+        (appState.stage4.score || 0) +
+        (appState.stage5.score || 0)
+      );
+    }
+
+    function getCompletedCount() {
+      var count = 0;
+      if (appState.stage1.completed) count++;
+      if (appState.stage2.completed) count++;
+      if (appState.stage3.completed) count++;
+      if (appState.stage4.completed) count++;
+      if (appState.stage5.completed) count++;
+      return count;
+    }
+
+    function getRankLabel(score, completedCount) {
+      if (completedCount === 5 && score >= 90) return `王牌總編輯`;
+      if (completedCount >= 3) return `校園特派記者`;
+      if (completedCount >= 1) return `進階小記者`;
+      return `實習小記者`;
+    }
+
+    function renderChrome() {
+      var totalScore = getTotalScore();
+      var completedCount = getCompletedCount();
+      var pct = Math.round((completedCount / 5) * 100);
+
+      var scoreEl = document.getElementById(`total-score`);
+      if (scoreEl) scoreEl.textContent = String(totalScore);
+
+      var rankEl = document.getElementById(`reporter-rank-label`);
+      if (rankEl) rankEl.textContent = getRankLabel(totalScore, completedCount);
+
+      var countEl = document.getElementById(`progress-count`);
+      if (countEl) countEl.textContent = completedCount + ` / 5 關已完成`;
+
+      var fillEl = document.getElementById(`progress-fill`);
+      if (fillEl) fillEl.style.width = pct + `%`;
+
+      var barWrap = document.getElementById(`progress-bar-wrap`);
+      if (barWrap) barWrap.setAttribute(`aria-valuenow`, String(pct));
+
+      var nameInput = document.getElementById(`reporter-name-input`);
+      if (nameInput && nameInput.value !== appState.reporterName) {
+        nameInput.value = appState.reporterName;
+      }
+
+      // Badges
+      var badgeListEl = document.getElementById(`badge-list`);
+      if (badgeListEl) {
+        var badgeHtml = ``;
+        for (var i = 0; i < BADGES.length; i++) {
+          var b = BADGES[i];
+          var st = appState[`stage` + b.id];
+          var earned = st && st.completed;
+          badgeHtml += `<span class="badge-chip` + (earned ? ` earned` : ``) + `">` +
+            b.label + (earned ? ` ✓` : `（未解鎖）`) +
+            `</span>`;
+        }
+        badgeListEl.innerHTML = badgeHtml;
+      }
+
+      // Stage Nav
+      var navEl = document.getElementById(`stage-nav`);
+      if (navEl) {
+        var navHtml = ``;
+        for (var j = 0; j < STAGE_META.length; j++) {
+          var m = STAGE_META[j];
+          var isActive = appState.currentStage === m.id;
+          var isDone = m.id <= 5 ? appState[`stage` + m.id].completed : completedCount === 5;
+          var cls = `stage-tab` + (isActive ? ` active` : ``) + (isDone ? ` completed` : ``);
+          var statusMark = isDone ? ` ✓` : ``;
+          navHtml += `<button type="button" class="` + cls + `" onclick="goToStage(` + m.id + `)">` +
+            `<span class="stage-tab-kicker">` + m.short + statusMark + `</span>` +
+            `<span class="stage-tab-title">` + m.title + `</span>` +
+            `</button>`;
+        }
+        navEl.innerHTML = navHtml;
+      }
+    }
+
+    function renderAll() {
+      renderChrome();
+      var container = document.getElementById(`stage-container`);
+      if (!container) return;
+
+      var st = appState.currentStage;
+      if (st === 1) container.innerHTML = renderStage1();
+      else if (st === 2) container.innerHTML = renderStage2();
+      else if (st === 3) container.innerHTML = renderStage3();
+      else if (st === 4) container.innerHTML = renderStage4();
+      else if (st === 5) container.innerHTML = renderStage5();
+      else container.innerHTML = renderSummaryStage();
+
+      if (window.lucide && typeof window.lucide.createIcons === `function`) {
+        window.lucide.createIcons();
+      }
+    }
+
+    // ---------- Global Navigation & Controls ----------
+    function goToStage(stageId) {
+      appState.currentStage = stageId;
+      renderAll();
+      saveState();
+      var card = document.getElementById(`stage-container`);
+      if (card) card.scrollIntoView({ behavior: `smooth`, block: `nearest` });
+    }
+
+    function handleNameInput(val) {
+      appState.reporterName = val.trim();
+      saveState();
+      if (appState.currentStage === 5 || appState.currentStage === 6) {
+        renderAll();
+      }
+    }
+
+    function handleResetClick(btn) {
+      if (!btn) return;
+      if (btn.dataset.armed !== `true`) {
+        btn.dataset.armed = `true`;
+        btn.innerHTML = `<i data-lucide="alert-circle" aria-hidden="true"></i><span>再點一次確定全部重來</span>`;
+        if (window.lucide && typeof window.lucide.createIcons === `function`) {
+          window.lucide.createIcons();
+        }
+        setTimeout(function() {
+          if (btn && btn.dataset.armed === `true`) {
+            btn.dataset.armed = `false`;
+            btn.innerHTML = `<i data-lucide="rotate-ccw" aria-hidden="true"></i><span>重新挑戰</span>`;
+            if (window.lucide && typeof window.lucide.createIcons === `function`) {
+              window.lucide.createIcons();
+            }
+          }
+        }, 4000);
+        return;
+      }
+      btn.dataset.armed = `false`;
+      btn.innerHTML = `<i data-lucide="rotate-ccw" aria-hidden="true"></i><span>重新挑戰</span>`;
+      appState = createInitialState();
+      renderAll();
+      saveState();
+    }
+
+    // ---------- STAGE 1: 5W1H ----------
+    function renderStage1() {
+      var s1 = appState.stage1;
+      var usedSet = {};
+      for (var k in s1.assignments) {
+        if (s1.assignments[k]) usedSet[s1.assignments[k]] = true;
+      }
+
+      var chipsHtml = ``;
+      for (var i = 0; i < S1_SHUFFLED_CHIPS.length; i++) {
+        var chip = S1_SHUFFLED_CHIPS[i];
+        var isUsed = !!usedSet[chip];
+        var isSel = s1.selectedChip === chip;
+        var cls = `clue-chip` + (isSel ? ` selected` : ``) + (isUsed ? ` used` : ``);
+        chipsHtml += `<button type="button" class="` + cls + `" ` + (isUsed ? `disabled` : ``) +
+          ` onclick="s1SelectChip(` + i + `)">` + chip + `</button>`;
+      }
+
+      var correctCount = 0;
+      var slotsHtml = ``;
+      for (var j = 0; j < S1_ITEMS.length; j++) {
+        var item = S1_ITEMS[j];
+        var assigned = s1.assignments[item.id];
+        var isRight = assigned === item.correctText;
+        if (s1.checked && isRight) correctCount++;
+
+        var slotCls = `w5h1-slot`;
+        if (assigned) slotCls += ` filled`;
+        if (s1.checked) slotCls += isRight ? ` correct` : ` wrong`;
+
+        slotsHtml += `<button type="button" class="` + slotCls + `" onclick="s1ClickSlot('` + item.id + `')">` +
+          `<div>` +
+            `<div class="w5h1-label">` + item.label + `</div>` +
+            `<div class="w5h1-placeholder">` + item.hint + `</div>` +
+          `</div>` +
+          `<div class="w5h1-answer">` +
+            (assigned ? `📌 ` + assigned + `（點擊可取回）` : `＋ 點選上方線索後，放進這裡`) +
+          `</div>` +
+          `</button>`;
+      }
+
+      var allFilled = true;
+      for (var key in s1.assignments) {
+        if (!s1.assignments[key]) allFilled = false;
+      }
+
+      var feedbackHtml = ``;
+      if (s1.checked) {
+        if (correctCount === 6) {
+          feedbackHtml = `<div class="feedback-box success">` +
+            `<div>🎉 太厲害了！6 個 5W1H 線索全部找對！獲得 20 分與「🔍 5W1H 偵探章」！</div>` +
+            `<div>原來一篇短新聞只要抓出人、事、時、地、原因、如何，就能馬上讀懂！</div>` +
+            `</div>`;
+        } else {
+          var hintLines = ``;
+          for (var h = 0; h < S1_ITEMS.length; h++) {
+            var it = S1_ITEMS[h];
+            if (s1.assignments[it.id] !== it.correctText) {
+              hintLines += `<div>• <strong>` + it.label + `</strong>：` + it.hint + `</div>`;
+            }
+          }
+          feedbackHtml = `<div class="feedback-box error">` +
+            `<div>目前答對 ` + correctCount + ` / 6 題（得分 ` + s1.score + ` 分）。點一下紅色框框把線索拿出來再調整看看吧！</div>` +
+            hintLines +
+            `</div>`;
+        }
+      }
+
+      return `
+        <div class="stage-header">
+          <div>
+            <h2 class="stage-title">第一關：新聞偵探 5W1H</h2>
+            <p class="stage-desc">讀一讀這篇《國語日報》經典校園報導，先點選下方的「線索卡片」，再放到正確的 5W1H 格子裡！</p>
+          </div>
+          <span class="stage-points-pill">本關得分：` + s1.score + ` / 20 分</span>
+        </div>
+
+        <div class="tip-box">
+          <div class="tip-icon"><i data-lucide="lightbulb" aria-hidden="true"></i></div>
+          <div class="tip-content">
+            <strong>小記者密技：</strong>一則完整的新聞一定要交代六個訊息：<strong>Who（何人）</strong>、<strong>When（何時）</strong>、<strong>Where（何處）</strong>、<strong>What（何事）</strong>、<strong>Why（為何）</strong>、<strong>How（如何）</strong>！
+          </div>
+        </div>
+
+        <article class="news-passage" aria-label="國語日報新聞範例">
+          <span class="clue-highlight">高雄市港和國小操場</span> <span class="clue-highlight">昨天</span> 舉辦 <span class="clue-highlight">親子太陽能悶燒鍋比賽</span>，<span class="clue-highlight">小朋友和家長</span> 在現場 <span class="clue-highlight">利用錫箔紙、紙箱及鍋子悶燒綠豆與雞蛋</span>，當看到鍋裡的綠豆滾煮，親子都開心地直歡呼！小朋友簡煒峰說，參加比賽能 <span class="clue-highlight">學習運用太陽能並重視節約能源</span>。
+        </article>
+
+        <div>
+          <div class="field-label" style="margin-bottom: var(--space-sm);">步驟 1：點選一個新聞線索詞卡</div>
+          <div class="clue-bank">` + chipsHtml + `</div>
+        </div>
+
+        <div>
+          <div class="field-label" style="margin-bottom: var(--space-sm);">步驟 2：點選對應的 5W1H 格子放入線索（若想更換，再點一次格子即可拿回）</div>
+          <div class="w5h1-grid">` + slotsHtml + `</div>
+        </div>
+
+        ` + feedbackHtml + `
+
+        <div class="action-row">
+          <button type="button" class="btn btn-soft" onclick="s1Reset()">清空重排</button>
+          <div style="display: flex; gap: var(--space-sm); flex-wrap: wrap;">
+            <button type="button" class="btn btn-primary" ` + (!allFilled ? `disabled` : ``) + ` onclick="s1Check()">
+              <i data-lucide="check-circle" aria-hidden="true"></i>
+              <span>對答案！揭曉線索</span>
+            </button>
+            ` + (s1.completed ? `<button type="button" class="btn btn-secondary" onclick="goToStage(2)">前進第二關 ➜</button>` : ``) + `
+          </div>
+        </div>
+      `;
+    }
+
+    function s1SelectChip(idx) {
+      var chip = S1_SHUFFLED_CHIPS[idx];
+      if (!chip) return;
+      appState.stage1.selectedChip = appState.stage1.selectedChip === chip ? `` : chip;
+      renderAll();
+    }
+
+    function s1ClickSlot(slotId) {
+      var s1 = appState.stage1;
+      if (s1.assignments[slotId]) {
+        // Return chip to bank
+        var prev = s1.assignments[slotId];
+        s1.assignments[slotId] = ``;
+        s1.checked = false;
+        if (!s1.selectedChip) s1.selectedChip = prev;
+        renderAll();
+        saveState();
+        return;
+      }
+      if (s1.selectedChip) {
+        s1.assignments[slotId] = s1.selectedChip;
+        s1.selectedChip = ``;
+        s1.checked = false;
+        // Auto-select next available chip for fast play
+        var used = {};
+        for (var k in s1.assignments) {
+          if (s1.assignments[k]) used[s1.assignments[k]] = true;
+        }
+        for (var i = 0; i < S1_SHUFFLED_CHIPS.length; i++) {
+          if (!used[S1_SHUFFLED_CHIPS[i]]) {
+            s1.selectedChip = S1_SHUFFLED_CHIPS[i];
+            break;
+          }
+        }
+        renderAll();
+        saveState();
+      }
+    }
+
+    function s1Reset() {
+      appState.stage1 = createInitialState().stage1;
+      renderAll();
+      saveState();
+    }
+
+    function s1Check() {
+      var s1 = appState.stage1;
+      var correctCount = 0;
+      for (var i = 0; i < S1_ITEMS.length; i++) {
+        var it = S1_ITEMS[i];
+        if (s1.assignments[it.id] === it.correctText) correctCount++;
+      }
+      s1.checked = true;
+      var earned = Math.round((correctCount / 6) * 20);
+      if (earned > s1.score) s1.score = earned;
+      if (correctCount === 6) s1.completed = true;
+      renderAll();
+      saveState();
+    }
+
+    // ---------- STAGE 2: Inverted Pyramid ----------
+    function renderStage2() {
+      var s2 = appState.stage2;
+      var rIdx = s2.roundIdx;
+      var round = S2_ROUNDS[rIdx];
+      var order = s2.orders[rIdx];
+      var isChecked = s2.checkedRounds[rIdx];
+      var isDone = s2.roundsDone[rIdx];
+
+      var tierMeta = [
+        { cls: `tier-top`, label: `🔺 最寬上層｜第一段【導言】：開門見山交代結果與 5W1H` },
+        { cls: `tier-mid`, label: `🔸 中間層｜第二段【本文】：按時間順序描寫現場過程與動作` },
+        { cls: `tier-bot`, label: `🔻 尖端下層｜第三段【尾段】：受訪者真心話與活動意義` }
+      ];
+
+      var usedMap = {};
+      for (var i = 0; i < order.length; i++) {
+        if (order[i]) usedMap[order[i]] = true;
+      }
+
+      var blocksHtml = ``;
+      for (var b = 0; b < round.blocks.length; b++) {
+        var blk = round.blocks[b];
+        var isUsed = !!usedMap[blk.id];
+        var isSel = s2.selectedBlockId === blk.id;
+        var cls = `puzzle-block` + (isSel ? ` selected` : ``) + (isUsed ? ` used` : ``);
+        blocksHtml += `<button type="button" class="` + cls + `" ` + (isUsed ? `disabled` : ``) +
+          ` onclick="s2SelectBlock('` + blk.id + `')">` +
+          `<span class="w5h1-label">` + blk.tag + `（點選我再點左邊梯形積木）</span>` +
+          `<span>` + blk.text + `</span>` +
+          `</button>`;
+      }
+
+      var tiersHtml = ``;
+      var correctCount = 0;
+      for (var t = 0; t < 3; t++) {
+        var placedId = order[t];
+        var placedBlk = null;
+        for (var k = 0; k < round.blocks.length; k++) {
+          if (round.blocks[k].id === placedId) placedBlk = round.blocks[k];
+        }
+        var isRight = placedId === round.correctOrder[t];
+        if (isChecked && isRight) correctCount++;
+
+        var tCls = `pyramid-tier ` + tierMeta[t].cls + (placedBlk ? ` filled` : ``);
+        if (isChecked) tCls += isRight ? ` correct` : ` wrong`;
+
+        tiersHtml += `<button type="button" class="` + tCls + `" onclick="s2ClickTier(` + t + `)">` +
+          `<span class="tier-badge">` + tierMeta[t].label + `</span>` +
+          (placedBlk
+            ? `<span><strong>` + placedBlk.tag + `：</strong>` + placedBlk.text + `（點擊可取回）</span>`
+            : `<span class="w5h1-placeholder">點選右邊段落卡片後，放進這層積木</span>`) +
+          `</button>`;
+      }
+
+      var allFilled = order[0] && order[1] && order[2];
+      var feedbackHtml = ``;
+      if (isChecked) {
+        if (correctCount === 3) {
+          feedbackHtml = `<div class="feedback-box success">` +
+            `<div>🎉 完美組裝！` + round.feedback + `</div>` +
+            `</div>`;
+        } else {
+          feedbackHtml = `<div class="feedback-box error">` +
+            `<div>目前排對了 ` + correctCount + ` / 3 層！記住口訣：最精華的結果放最上面，現場過程放中間，受訪者心聲放最後喔！點一下紅色格子即可取回重排。</div>` +
+            `</div>`;
+        }
+      }
+
+      return `
+        <div class="stage-header">
+          <div>
+            <h2 class="stage-title">第二關：倒金字塔大拼圖</h2>
+            <p class="stage-desc">新聞寫作要把「最重要的訊息放最前面」！完成兩篇報導的倒金字塔排列，就能獲得建築師徽章。</p>
+          </div>
+          <span class="stage-points-pill">本關得分：` + s2.score + ` / 20 分</span>
+        </div>
+
+        <div style="display: flex; gap: var(--space-sm); flex-wrap: wrap; align-items: center;">
+          <button type="button" class="btn ` + (rIdx === 0 ? `btn-primary` : `btn-soft`) + `" onclick="s2SwitchRound(0)">
+            任務一：太陽能悶燒鍋 ` + (s2.roundsDone[0] ? `✓` : ``) + `
+          </button>
+          <button type="button" class="btn ` + (rIdx === 1 ? `btn-primary` : `btn-soft`) + `" onclick="s2SwitchRound(1)">
+            任務二：班級拔河決賽 ` + (s2.roundsDone[1] ? `✓` : ``) + `
+          </button>
+        </div>
+
+        <div class="tip-box">
+          <div class="tip-icon"><i data-lucide="triangle" aria-hidden="true"></i></div>
+          <div class="tip-content">
+            <strong>` + round.title + `：</strong>` + round.subtitle + `
+          </div>
+        </div>
+
+        <div class="pyramid-layout">
+          <div class="pyramid-stack" aria-label="倒金字塔放置區">
+            ` + tiersHtml + `
+          </div>
+          <div class="block-pool" aria-label="待排列段落積木">
+            <div class="field-label">待排列段落積木（點選後放到左邊倒金字塔）：</div>
+            ` + blocksHtml + `
+          </div>
+        </div>
+
+        ` + feedbackHtml + `
+
+        <div class="action-row">
+          <button type="button" class="btn btn-soft" onclick="s2ResetRound()">重排這一題</button>
+          <div style="display: flex; gap: var(--space-sm); flex-wrap: wrap;">
+            <button type="button" class="btn btn-primary" ` + (!allFilled ? `disabled` : ``) + ` onclick="s2CheckRound()">
+              <i data-lucide="layers" aria-hidden="true"></i>
+              <span>組合倒金字塔！</span>
+            </button>
+            ` + (isDone && rIdx === 0 && !s2.roundsDone[1] ? `<button type="button" class="btn btn-secondary" onclick="s2SwitchRound(1)">挑戰任務二 ➜</button>` : ``) + `
+            ` + (s2.completed ? `<button type="button" class="btn btn-secondary" onclick="goToStage(3)">前進第三關 ➜</button>` : ``) + `
+          </div>
+        </div>
+      `;
+    }
+
+    function s2SwitchRound(idx) {
+      appState.stage2.roundIdx = idx;
+      appState.stage2.selectedBlockId = null;
+      renderAll();
+      saveState();
+    }
+
+    function s2SelectBlock(blockId) {
+      var s2 = appState.stage2;
+      s2.selectedBlockId = s2.selectedBlockId === blockId ? null : blockId;
+      // If user clicks a block, also let them place easily into first empty slot if they double click or we keep explicit click-slot
+      renderAll();
+    }
+
+    function s2ClickTier(tierIdx) {
+      var s2 = appState.stage2;
+      var rIdx = s2.roundIdx;
+      var order = s2.orders[rIdx];
+      if (order[tierIdx]) {
+        var prev = order[tierIdx];
+        order[tierIdx] = null;
+        s2.checkedRounds[rIdx] = false;
+        if (!s2.selectedBlockId) s2.selectedBlockId = prev;
+        renderAll();
+        saveState();
+        return;
+      }
+      if (s2.selectedBlockId) {
+        order[tierIdx] = s2.selectedBlockId;
+        s2.selectedBlockId = null;
+        s2.checkedRounds[rIdx] = false;
+        // Auto-select remaining block if any
+        var round = S2_ROUNDS[rIdx];
+        var used = {};
+        for (var i = 0; i < 3; i++) {
+          if (order[i]) used[order[i]] = true;
+        }
+        for (var b = 0; b < round.blocks.length; b++) {
+          if (!used[round.blocks[b].id]) {
+            s2.selectedBlockId = round.blocks[b].id;
+            break;
+          }
+        }
+        renderAll();
+        saveState();
+      }
+    }
+
+    function s2ResetRound() {
+      var s2 = appState.stage2;
+      var rIdx = s2.roundIdx;
+      s2.orders[rIdx] = [null, null, null];
+      s2.checkedRounds[rIdx] = false;
+      s2.selectedBlockId = null;
+      renderAll();
+      saveState();
+    }
+
+    function s2CheckRound() {
+      var s2 = appState.stage2;
+      var rIdx = s2.roundIdx;
+      var round = S2_ROUNDS[rIdx];
+      var order = s2.orders[rIdx];
+      s2.checkedRounds[rIdx] = true;
+
+      var allCorrect = order[0] === round.correctOrder[0] &&
+        order[1] === round.correctOrder[1] &&
+        order[2] === round.correctOrder[2];
+      if (allCorrect) {
+        s2.roundsDone[rIdx] = true;
+      }
+      var doneCount = (s2.roundsDone[0] ? 1 : 0) + (s2.roundsDone[1] ? 1 : 0);
+      var newScore = doneCount * 10;
+      if (newScore > s2.score) s2.score = newScore;
+      if (doneCount === 2) s2.completed = true;
+      renderAll();
+      saveState();
+    }
+
+    // ---------- STAGE 3: Fact vs. Opinion ----------
+    function renderStage3() {
+      var s3 = appState.stage3;
+      var idx = s3.currentIdx;
+      var card = S3_CARDS[idx];
+      var chosen = s3.answers[idx];
+      var isCorrect = chosen === card.answer;
+
+      var dotsHtml = ``;
+      for (var i = 0; i < S3_CARDS.length; i++) {
+        var cls = `step-dot`;
+        if (i === idx) cls += ` active`;
+        else if (s3.answers[i] !== null) cls += ` done`;
+        dotsHtml += `<span class="` + cls + `" title="第 ` + (i + 1) + ` 題"></span>`;
+      }
+
+      var feedbackHtml = ``;
+      if (chosen !== null) {
+        feedbackHtml = `<div class="feedback-box ` + (isCorrect ? `success` : `error`) + `" style="width: 100%; max-width: 640px; text-align: left;">` +
+          `<div>` + (isCorrect ? `✓ 答對了！` : `✗ 哎呀，再想一下喔！`) + `</div>` +
+          `<div>` + card.explanation + `</div>` +
+          `</div>`;
+      }
+
+      var allAnswered = true;
+      for (var a = 0; a < s3.answers.length; a++) {
+        if (s3.answers[a] === null) allAnswered = false;
+      }
+
+      return `
+        <div class="stage-header">
+          <div>
+            <h2 class="stage-title">第三關：火眼金睛辨真偽（事實 vs. 觀點）</h2>
+            <p class="stage-desc">新聞報導講求真實與客觀！快問快答判斷下列五張卡片，哪句是可驗證的「客觀事實」，哪句是個人的「主觀觀點」？</p>
+          </div>
+          <span class="stage-points-pill">本關得分：` + s3.score + ` / 20 分</span>
+        </div>
+
+        <div class="tip-box">
+          <div class="tip-icon"><i data-lucide="scale" aria-hidden="true"></i></div>
+          <div class="tip-content">
+            <strong>小主編判斷法：</strong>
+            <strong>客觀事實</strong>＝大家去查證結果都一樣；
+            <strong>主觀觀點</strong>＝個人看法或心情感受，換一個人想法可能就不同。
+          </div>
+        </div>
+
+        <div class="flashcard-panel">
+          <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 640px;">
+            <span class="field-label">第 ` + (idx + 1) + ` / ` + S3_CARDS.length + ` 張卡片</span>
+            <div class="step-dots">` + dotsHtml + `</div>
+          </div>
+
+          <div class="quote-card">
+            <p class="quote-text">` + card.statement + `</p>
+          </div>
+
+          <div class="binary-choices">
+            <button type="button" class="choice-card-btn choice-fact" ` + (chosen !== null ? `disabled` : ``) + ` onclick="s3Answer('fact')">
+              <i data-lucide="check-square" aria-hidden="true"></i>
+              <span>客觀事實（可驗證）</span>
+            </button>
+            <button type="button" class="choice-card-btn choice-opinion" ` + (chosen !== null ? `disabled` : ``) + ` onclick="s3Answer('opinion')">
+              <i data-lucide="message-circle-heart" aria-hidden="true"></i>
+              <span>主觀觀點（個人感受）</span>
+            </button>
+          </div>
+
+          ` + feedbackHtml + `
+
+          <div class="action-row" style="width: 100%; max-width: 640px;">
+            <button type="button" class="btn btn-soft" ` + (idx === 0 ? `disabled` : ``) + ` onclick="s3Move(-1)">上一張</button>
+            <div style="display: flex; gap: var(--space-sm); flex-wrap: wrap;">
+              ` + (idx < S3_CARDS.length - 1
+                ? `<button type="button" class="btn btn-primary" ` + (chosen === null ? `disabled` : ``) + ` onclick="s3Move(1)">下一張卡片 ➜</button>`
+                : (allAnswered
+                    ? `<button type="button" class="btn btn-secondary" onclick="goToStage(4)">獲得徽章！前進第四關 ➜</button>`
+                    : ``)) + `
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function s3Answer(choice) {
+      var s3 = appState.stage3;
+      if (s3.answers[s3.currentIdx] !== null) return;
+      s3.answers[s3.currentIdx] = choice;
+
+      var right = 0;
+      var answered = 0;
+      for (var i = 0; i < S3_CARDS.length; i++) {
+        if (s3.answers[i] !== null) {
+          answered++;
+          if (s3.answers[i] === S3_CARDS[i].answer) right++;
+        }
+      }
+      s3.score = right * 4;
+      if (answered === S3_CARDS.length) s3.completed = true;
+      renderAll();
+      saveState();
+    }
+
+    function s3Move(delta) {
+      var next = appState.stage3.currentIdx + delta;
+      if (next >= 0 && next < S3_CARDS.length) {
+        appState.stage3.currentIdx = next;
+        renderAll();
+        saveState();
+      }
+    }
+
+    // ---------- STAGE 4: Interview Master ----------
+    function renderStage4() {
+      var s4 = appState.stage4;
+      var idx = s4.currentIdx;
+      var q = S4_QUESTIONS[idx];
+      var chosenIdx = s4.answers[idx];
+
+      var dotsHtml = ``;
+      for (var i = 0; i < S4_QUESTIONS.length; i++) {
+        var cls = `step-dot`;
+        if (i === idx) cls += ` active`;
+        else if (s4.answers[i] !== null) cls += ` done`;
+        dotsHtml += `<span class="` + cls + `" title="情境 ` + (i + 1) + `"></span>`;
+      }
+
+      var letters = [`A`, `B`, `C`];
+      var optsHtml = ``;
+      for (var o = 0; o < q.options.length; o++) {
+        var opt = q.options[o];
+        var cls = `option-btn`;
+        if (chosenIdx !== null) {
+          if (opt.correct) cls += ` correct`;
+          else if (chosenIdx === o) cls += ` wrong`;
+        }
+        optsHtml += `<button type="button" class="` + cls + `" ` + (chosenIdx !== null ? `disabled` : ``) + ` onclick="s4Choose(` + o + `)">` +
+          `<span class="option-letter">` + letters[o] + `</span>` +
+          `<span>` + opt.text + `</span>` +
+          `</button>`;
+      }
+
+      var feedbackHtml = ``;
+      if (chosenIdx !== null) {
+        var picked = q.options[chosenIdx];
+        feedbackHtml = `<div class="feedback-box ` + (picked.correct ? `success` : `error`) + `">` +
+          `<div>` + (picked.correct ? `🎤 採訪高手！` : `💡 小記者提醒：`) + picked.why + `</div>` +
+          `</div>`;
+      }
+
+      var allDone = true;
+      for (var a = 0; a < s4.answers.length; a++) {
+        if (s4.answers[a] === null) allDone = false;
+      }
+
+      return `
+        <div class="stage-header">
+          <div>
+            <h2 class="stage-title">第四關：採訪提問大師</h2>
+            <p class="stage-desc">小記者出任務囉！面對不同採訪情境，練習問出「開放式好問題」、適時追問、展現禮儀與啟動 B 計劃！</p>
+          </div>
+          <span class="stage-points-pill">本關得分：` + s4.score + ` / 20 分</span>
+        </div>
+
+        <div class="tip-box">
+          <div class="tip-icon"><i data-lucide="mic" aria-hidden="true"></i></div>
+          <div class="tip-content">
+            <strong>採訪秘笈：</strong>避免只會回答「是／不是」的<strong>封閉式問題</strong>，改用「為什麼」、「怎麼做」、「最難忘的是什麼」才能挖出精彩故事！
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span class="field-label">情境挑戰 ` + (idx + 1) + ` / ` + S4_QUESTIONS.length + `</span>
+          <div class="step-dots">` + dotsHtml + `</div>
+        </div>
+
+        <div class="news-passage" style="font-weight: 700;">
+          ` + q.situation + `
+        </div>
+
+        <div class="option-list">` + optsHtml + `</div>
+
+        ` + feedbackHtml + `
+
+        <div class="action-row">
+          <button type="button" class="btn btn-soft" ` + (idx === 0 ? `disabled` : ``) + ` onclick="s4Move(-1)">上一題</button>
+          <div style="display: flex; gap: var(--space-sm); flex-wrap: wrap;">
+            ` + (idx < S4_QUESTIONS.length - 1
+              ? `<button type="button" class="btn btn-primary" ` + (chosenIdx === null ? `disabled` : ``) + ` onclick="s4Move(1)">下一個情境 ➜</button>`
+              : (allDone
+                  ? `<button type="button" class="btn btn-secondary" onclick="goToStage(5)">獲得徽章！前進最終關 ➜</button>`
+                  : ``)) + `
+          </div>
+        </div>
+      `;
+    }
+
+    function s4Choose(optIdx) {
+      var s4 = appState.stage4;
+      if (s4.answers[s4.currentIdx] !== null) return;
+      s4.answers[s4.currentIdx] = optIdx;
+
+      var right = 0;
+      var answered = 0;
+      for (var i = 0; i < S4_QUESTIONS.length; i++) {
+        if (s4.answers[i] !== null) {
+          answered++;
+          if (S4_QUESTIONS[i].options[s4.answers[i]].correct) right++;
+        }
+      }
+      s4.score = right * 5;
+      if (answered === S4_QUESTIONS.length) s4.completed = true;
+      renderAll();
+      saveState();
+    }
+
+    function s4Move(delta) {
+      var next = appState.stage4.currentIdx + delta;
+      if (next >= 0 && next < S4_QUESTIONS.length) {
+        appState.stage4.currentIdx = next;
+        renderAll();
+        saveState();
+      }
+    }
+
+    // ---------- STAGE 5: Chief Editor Layout ----------
+    function renderStage5() {
+      var s5 = appState.stage5;
+
+      var titleOptsHtml = ``;
+      for (var i = 0; i < S5_TITLES.length; i++) {
+        var t = S5_TITLES[i];
+        var cls = `option-btn`;
+        if (s5.titleIdx === i) cls += ` selected`;
+        if (s5.published) {
+          if (t.correct) cls += ` correct`;
+          else if (s5.titleIdx === i) cls += ` wrong`;
+        }
+        titleOptsHtml += `<button type="button" class="` + cls + `" onclick="s5PickTitle(` + i + `)">` +
+          `<span class="option-letter">` + (i + 1) + `</span>` +
+          `<span>` + t.text + `</span>` +
+          `</button>`;
+      }
+
+      var capOptsHtml = ``;
+      for (var j = 0; j < S5_CAPTIONS.length; j++) {
+        var c = S5_CAPTIONS[j];
+        var cCls = `option-btn`;
+        if (s5.captionIdx === j) cCls += ` selected`;
+        if (s5.published) {
+          if (c.correct) cCls += ` correct`;
+          else if (s5.captionIdx === j) cCls += ` wrong`;
+        }
+        capOptsHtml += `<button type="button" class="` + cCls + `" onclick="s5PickCaption(` + j + `)">` +
+          `<span class="option-letter">` + (j + 1) + `</span>` +
+          `<span>` + c.text + `</span>` +
+          `</button>`;
+      }
+
+      var checkHtml = ``;
+      var checkedAll = true;
+      for (var k = 0; k < S5_CHECKLIST.length; k++) {
+        var isChk = !!s5.checklist[k];
+        if (!isChk) checkedAll = false;
+        checkHtml += `<label class="check-pill` + (isChk ? ` checked` : ``) + `">` +
+          `<input type="checkbox" ` + (isChk ? `checked` : ``) + ` onchange="s5ToggleCheck(` + k + `)">` +
+          `<span>` + S5_CHECKLIST[k] + `</span>` +
+          `</label>`;
+      }
+
+      var canPublish = s5.titleIdx !== null && s5.captionIdx !== null && checkedAll;
+
+      var feedbackHtml = ``;
+      if (s5.published) {
+        var titleObj = S5_TITLES[s5.titleIdx];
+        var capObj = S5_CAPTIONS[s5.captionIdx];
+        var bothRight = titleObj.correct && capObj.correct;
+        feedbackHtml = `<div class="feedback-box ` + (bothRight ? `success` : `info`) + `">` +
+          `<div><strong>標題評語：</strong>` + titleObj.reason + `</div>` +
+          `<div><strong>圖說評語：</strong>` + capObj.reason + `</div>` +
+          `<div>` + (bothRight
+            ? `🎉 太棒了！你已獲得 20 分與「📰 王牌小主編」徽章！快來看看你的創刊號吧！`
+            : `你可以調整標題或圖說再按一次「發布創刊號」，挑戰滿分 20 分喔！`) + `</div>` +
+          `</div>`;
+      }
+
+      return `
+        <div class="stage-header">
+          <div>
+            <h2 class="stage-title">第五關：主編組版大挑戰</h2>
+            <p class="stage-desc">最後一關！請為這篇《跳大繩決賽》校園報導選出最響亮的標題、最佳照片圖說，並核對出刊前檢查表！</p>
+          </div>
+          <span class="stage-points-pill">本關得分：` + s5.score + ` / 20 分</span>
+        </div>
+
+        <div class="news-passage">
+          <strong>報導內文預覽：</strong>本校三年級昨天在操場舉辦跳大繩決賽，三甲同學展現默契成功連續跳過 35 下奪得冠軍，全班在場邊歡呼慶祝。三甲小隊長表示，大家每天下課練習兩週，終於一起達成目標！
+        </div>
+
+        <div class="editor-grid">
+          <div style="display: flex; flex-direction: column; gap: var(--space-sm);">
+            <div class="field-label">任務 A：選出最精準吸睛的新聞標題</div>
+            <div class="option-list">` + titleOptsHtml + `</div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: var(--space-sm);">
+            <div class="field-label">任務 B：為這張活動照片挑選最佳「照片圖說」</div>
+            <div class="photo-frame">
+              <svg viewBox="0 0 360 150" width="100%" height="140" aria-hidden="true">
+                <rect x="0" y="0" width="360" height="150" rx="16" fill="var(--sky-bg)"/>
+                <rect x="0" y="112" width="360" height="38" fill="var(--positive-bg)"/>
+                <path d="M 55 95 Q 180 25 305 95" fill="none" stroke="var(--primary)" stroke-width="4" stroke-dasharray="6 4"/>
+                <circle cx="55" cy="72" r="12" fill="var(--secondary)"/>
+                <rect x="46" y="86" width="18" height="28" rx="8" fill="var(--secondary)"/>
+                <circle cx="135" cy="64" r="12" fill="var(--primary)"/>
+                <rect x="126" y="78" width="18" height="26" rx="8" fill="var(--primary)"/>
+                <circle cx="180" cy="58" r="12" fill="var(--tangerine)"/>
+                <rect x="171" y="72" width="18" height="26" rx="8" fill="var(--tangerine)"/>
+                <circle cx="225" cy="64" r="12" fill="var(--tertiary)"/>
+                <rect x="216" y="78" width="18" height="26" rx="8" fill="var(--tertiary)"/>
+                <circle cx="305" cy="72" r="12" fill="var(--secondary)"/>
+                <rect x="296" y="86" width="18" height="28" rx="8" fill="var(--secondary)"/>
+              </svg>
+              <div class="option-list" style="width: 100%;">` + capOptsHtml + `</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: var(--space-sm);">
+          <div class="field-label">任務 C：出刊前最後核對 Checklist（請逐項確認打勾）</div>
+          <div class="checklist-grid">` + checkHtml + `</div>
+        </div>
+
+        ` + feedbackHtml + `
+
+        <div class="action-row">
+          <span class="field-label">` + (canPublish ? `✓ 全部準備就緒，可以發布創刊號囉！` : `請完成標題、圖說選擇並勾選全部 6 項檢查表`) + `</span>
+          <div style="display: flex; gap: var(--space-sm); flex-wrap: wrap;">
+            <button type="button" class="btn btn-primary" ` + (!canPublish ? `disabled` : ``) + ` onclick="s5Publish()">
+              <i data-lucide="send" aria-hidden="true"></i>
+              <span>正式發布創刊號！</span>
+            </button>
+            ` + (s5.completed ? `<button type="button" class="btn btn-secondary" onclick="goToStage(6)">查看我的新聞創刊號 ➜</button>` : ``) + `
+          </div>
+        </div>
+      `;
+    }
+
+    function s5PickTitle(idx) {
+      appState.stage5.titleIdx = idx;
+      appState.stage5.published = false;
+      renderAll();
+      saveState();
+    }
+
+    function s5PickCaption(idx) {
+      appState.stage5.captionIdx = idx;
+      appState.stage5.published = false;
+      renderAll();
+      saveState();
+    }
+
+    function s5ToggleCheck(idx) {
+      appState.stage5.checklist[idx] = !appState.stage5.checklist[idx];
+      appState.stage5.published = false;
+      renderAll();
+      saveState();
+    }
+
+    function s5Publish() {
+      var s5 = appState.stage5;
+      if (s5.titleIdx === null || s5.captionIdx === null) return;
+      s5.published = true;
+      var pts = 6; // checklist
+      if (S5_TITLES[s5.titleIdx].correct) pts += 7;
+      if (S5_CAPTIONS[s5.captionIdx].correct) pts += 7;
+      if (pts > s5.score) s5.score = pts;
+      s5.completed = true;
+      renderAll();
+      saveState();
+    }
+
+    // ---------- STAGE 6: Final Newspaper & Settlement ----------
+    function renderSummaryStage() {
+      var totalScore = getTotalScore();
+      var completedCount = getCompletedCount();
+      var reporter = appState.reporterName || `三年級小記者`;
+      var rank = getRankLabel(totalScore, completedCount);
+
+      var chosenTitle = appState.stage5.titleIdx !== null
+        ? S5_TITLES[appState.stage5.titleIdx].text
+        : `三年級跳大繩決賽 三甲連跳35下奪冠`;
+      var chosenCaption = appState.stage5.captionIdx !== null
+        ? S5_CAPTIONS[appState.stage5.captionIdx].text
+        : `▲三年級同學齊心協力跳大繩，展現絕佳團隊默契。`;
+
+      var stageRows = ``;
+      for (var i = 1; i <= 5; i++) {
+        var st = appState[`stage` + i];
+        stageRows += `<div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-sm) var(--space-md); background: var(--surface-container); border-radius: var(--rounded);">` +
+          `<span><strong>` + STAGE_META[i - 1].short + `：</strong>` + STAGE_META[i - 1].title + `</span>` +
+          `<span style="font-weight: 800; color: ` + (st.completed ? `var(--positive)` : `var(--on-surface-variant)`) + `;">` +
+          st.score + ` / 20 分 ` + (st.completed ? `（已領徽章 ✓）` : `（尚未完成）`) +
+          `</span>` +
+          `</div>`;
+      }
+
+      return `
+        <div class="stage-header">
+          <div>
+            <h2 class="stage-title">🏆 結算總部與《班級新聞創刊號》</h2>
+            <p class="stage-desc">` + reporter + `，辛苦了！這裡是你的五關成績結算，以及由你親手編輯發布的班級報頭版！</p>
+          </div>
+          <span class="stage-points-pill">總成績：` + totalScore + ` / 100 分（` + rank + `）</span>
+        </div>
+
+        <div style="display: grid; gap: var(--space-sm);">` + stageRows + `</div>
+
+        <article class="newspaper-sheet" aria-label="班級新聞創刊號成果預覽">
+          <div class="paper-masthead">
+            <div>
+              <div class="paper-meta">第 01 版・校園焦點頭條・創刊號</div>
+              <h3 class="paper-name">小小記者培力營・班級新聞報</h3>
+            </div>
+            <div class="paper-meta">總編輯：` + reporter + ` ｜ 發行日期：今日特刊</div>
+          </div>
+
+          <div class="paper-body-grid">
+            <div>
+              <h4 class="paper-headline">` + chosenTitle + `</h4>
+              <span class="paper-byline">特派小記者 ` + reporter + ` ／ 學校操場報導</span>
+              <p style="margin: 0 0 var(--space-sm) 0;">
+                <strong>【導言】</strong>本校三年級昨天在操場舉辦跳大繩決賽，三甲同學展現默契成功連續跳過 35 下奪得冠軍，現場加油聲不斷。
+              </p>
+              <p style="margin: 0 0 var(--space-sm) 0;">
+                <strong>【本文】</strong>哨聲響起後，搖繩的同學雙手穩定劃出大圓弧，隊員們排成縱隊依序輕巧躍起，節奏整齊一致。
+              </p>
+              <p style="margin: 0;">
+                <strong>【尾段】</strong>三甲小隊長表示：「大家每天利用下課練習兩週，雖然汗流浹背，但一起拿下冠軍真的超有成就感！」
+              </p>
+            </div>
+
+            <div class="photo-frame">
+              <svg viewBox="0 0 360 170" width="100%" height="160" aria-hidden="true">
+                <rect x="0" y="0" width="360" height="170" rx="16" fill="var(--sky-bg)"/>
+                <rect x="0" y="128" width="360" height="42" fill="var(--positive-bg)"/>
+                <path d="M 55 110 Q 180 30 305 110" fill="none" stroke="var(--primary)" stroke-width="4" stroke-dasharray="6 4"/>
+                <circle cx="55" cy="84" r="13" fill="var(--secondary)"/>
+                <rect x="45" y="99" width="20" height="30" rx="8" fill="var(--secondary)"/>
+                <circle cx="135" cy="74" r="13" fill="var(--primary)"/>
+                <rect x="125" y="89" width="20" height="28" rx="8" fill="var(--primary)"/>
+                <circle cx="180" cy="66" r="13" fill="var(--tangerine)"/>
+                <rect x="170" y="81" width="20" height="28" rx="8" fill="var(--tangerine)"/>
+                <circle cx="225" cy="74" r="13" fill="var(--tertiary)"/>
+                <rect x="215" y="89" width="20" height="28" rx="8" fill="var(--tertiary)"/>
+                <circle cx="305" cy="84" r="13" fill="var(--secondary)"/>
+                <rect x="295" y="99" width="20" height="30" rx="8" fill="var(--secondary)"/>
+              </svg>
+              <div style="font-size: 0.9rem; font-weight: 700; color: var(--on-surface);">` + chosenCaption + `</div>
+            </div>
+          </div>
+        </article>
+
+        <div class="action-row">
+          <button type="button" class="btn btn-soft" onclick="goToStage(1)">回到第一關複習</button>
+          <button type="button" class="btn btn-primary" onclick="exportReport()">
+            <i data-lucide="download" aria-hidden="true"></i>
+            <span>匯出小記者闖關成績單 (.txt)</span>
+          </button>
+        </div>
+        <div id="export-status" class="field-label" style="text-align: right; color: var(--positive);"></div>
+      `;
+    }
+
+    function exportReport() {
+      var reporter = appState.reporterName || `三年級小記者`;
+      var totalScore = getTotalScore();
+      var completedCount = getCompletedCount();
+      var chosenTitle = appState.stage5.titleIdx !== null
+        ? S5_TITLES[appState.stage5.titleIdx].text
+        : `尚未選擇`;
+      var chosenCaption = appState.stage5.captionIdx !== null
+        ? S5_CAPTIONS[appState.stage5.captionIdx].text
+        : `尚未選擇`;
+
+      var lines = [
+        `=== 我是校園特派小記者：闖關成績單 ===`,
+        `小記者姓名：` + reporter,
+        `稱號等級：` + getRankLabel(totalScore, completedCount),
+        `總分：` + totalScore + ` / 100 分（完成 ` + completedCount + ` / 5 關）`,
+        ``,
+        `--- 各關成績 ---`,
+        `第一關【新聞偵探 5W1H】：` + appState.stage1.score + ` / 20`,
+        `第二關【倒金字塔大拼圖】：` + appState.stage2.score + ` / 20`,
+        `第三關【事實 vs. 觀點】：` + appState.stage3.score + ` / 20`,
+        `第四關【採訪提問大師】：` + appState.stage4.score + ` / 20`,
+        `第五關【主編組版大挑戰】：` + appState.stage5.score + ` / 20`,
+        ``,
+        `--- 我的班級新聞創刊號 ---`,
+        `新聞標題：` + chosenTitle,
+        `照片圖說：` + chosenCaption
+      ].join(`\n`);
+
+      if (window.notebookAppApi && typeof window.notebookAppApi.triggerFileDownload === `function`) {
+        window.notebookAppApi.triggerFileDownload({
+          content: lines,
+          contentType: `text/plain`,
+          encoding: `UTF-8`,
+          filename: `小記者闖關成績單.txt`
+        });
+      }
+      var statusEl = document.getElementById(`export-status`);
+      if (statusEl) {
+        statusEl.textContent = `✓ 已觸發匯出「小記者闖關成績單.txt」！`;
+      }
+    }
+
+    // ---------- Initialization ----------
+    async function initApp() {
+      try {
+        if (window.notebookAppApi && typeof window.notebookAppApi.getAppState === `function`) {
+          var saved = await window.notebookAppApi.getAppState();
+          if (saved) restoreFromState(saved);
+        }
+      } catch (err) {
+        console.warn(`Load state failed:`, err);
+      }
+
+      renderAll();
+
+      if (window.notebookAppApi && typeof window.notebookAppApi.notifyAppReady === `function`) {
+        window.notebookAppApi.notifyAppReady();
+      }
+    }
+
+    if (document.readyState === `loading`) {
+      document.addEventListener(`DOMContentLoaded`, initApp);
+    } else {
+      initApp();
+    }
+  </script>
+</body>
+</html>
